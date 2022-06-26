@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+
+    <title>To Do List</title>
+
+    <style>
+      .create-div {
+        width: 100%;
+        height: 40px;
+        background: var(--icons-bg-color);
+        margin-top: 1rem;
+        border-radius: 1rem;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        padding-left: 1rem;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <div class="app-info">
+        <i class="uil uil-adjust-circle"></i>
+        <h1>ToDo List</h1>
+      </div>
+      <div class="dotolist-conatiner">
+        <div class="inputField">
+          <form>
+            <input type="text" placeholder="type your list.." id="input" />
+            <input type="submit" id="btn_todo" class="uil uil-plus" value="Them" /></br>
+            <select id="select_todo" class="form-control">
+              <option value="tatca">tatcacongviec</option>
+              <option value="hoanthanh">hoanthanh</option>
+              <option value="chuahoanthanh">chuahoanthanh</option>
+            </select>
+          </form>
+          <ul>
+            <div id ="list_todo">
+
+            </div>
+          <!-- <div class="todo">
+            <li>Hoc web</li>
+            <button>da hoan thanh</button><button>xoa</button>
+          </div>
+          <div class="todo">
+            <li>Hoc web</li>
+            <button>da hoan thanh</button><button>xoa</button>
+          </div>
+          <div class="todo">
+            <li>Hoc web</li>
+            <button>da hoan thanh</button><button>xoa</button>
+          </div> -->
+          </ul>
+        </div>
+        <div class="add-list"></div>
+      </div>
+    </div>
+
+    <script>
+      const input_value = document.getElementById("input");
+      const btn_todo = document.getElementById("btn_todo");
+      const list_todo = document.getElementById("list_todo");
+      const delete_btn = document.getElementById("delete_btn");
+      btn_todo.addEventListener("click",addtodo);
+      // delete_btn.addEventListener("click",deleteTodo);
+      list_todo.addEventListener("click",deleteTodo);
+      listTodos()
+      function deleteTodo(event){
+        console.log(event.target);
+        const item = event.target;
+        if (item.classList[0]==='delete_btn'){
+          const todo = item.parentElement
+          todo.remove();
+          removeTodo(todo);
+        } 
+      }
+      function removeTodo(todo){
+        let todos;
+        if (localStorage.getItem("todos")==null){
+          todos=[];
+        }else{
+            todos =JSON.parse(localStorage.getItem("todos"))
+          }
+        const todoIndex = todo.children[0].innerText;
+        console.log(todoIndex);
+        todos.splice(todos.indexOf(todoIndex),1);
+        localStorage.setItem("todos", JSON.stringify(todos));
+      }
+    //   function removeTask(id) {
+    //   list = list.filter(t => t.id !== id);
+    // localStorage.setItem('tasks', JSON.stringify(list));
+
+        // function editTask(id) {
+        //   const taskText = document.querySelector('#task-text').value;
+
+        //   // Get Task
+        //   if (taskText == '' || taskText == null) return;
+        //   const taskIndex = list.findIndex(t => t.id == id);
+
+        //   // Change State And Save Changes
+        //   list[taskIndex].text = taskText;
+        //   localStorage.setItem('tasks', JSON.stringify(list));
+
+        // }
+      function addtodo(event){
+        event.preventDefault();
+        todo = input_value.value;
+        if (todo){ 
+          console.log(todo);
+          const newDiv = document.createElement("div");
+          newDiv.classList.add("todo");
+          const newTodo = document.createElement("li");
+          newTodo.innerText = todo;
+          newTodo.classList.add("todo-item");
+          newDiv.appendChild(newTodo);
+          
+          const btn_hoanthanh = document.createElement("button");
+          btn_hoanthanh.innerText = ("Hoan thanh");
+          btn_hoanthanh.classList.add("completed_btn");
+          newDiv.appendChild(btn_hoanthanh)  
+          
+          const btn_xoa = document.createElement("button");
+          btn_xoa.innerText = ("Xoa");
+          btn_xoa.classList.add("delete_btn");
+          newDiv.appendChild(btn_xoa) 
+          
+          list_todo.appendChild(newDiv);
+          savelocal(todo);  
+        }
+      }  
+
+      function savelocal(todo){
+        let todos;
+        if (localStorage.getItem("todos")==null){
+          todos=[];
+        }else{
+            todos =JSON.parse(localStorage.getItem("todos"))
+          }
+        
+      todos.push({
+        text:todo,
+        complete:false
+
+      });
+      localStorage.setItem("todos", JSON.stringify(todos));
+    }
+
+    function listTodos(){
+      let todos;
+       if (localStorage.getItem("todos")==null){
+          todos=[];
+        }else{
+            todos =JSON.parse(localStorage.getItem("todos"))
+          }
+          todos.forEach(nhiemvu => {
+            const newDiv = document.createElement("div");
+          newDiv.classList.add("todo");
+          const newTodo = document.createElement("li");
+          newTodo.innerText = nhiemvu.text;
+          newTodo.classList.add("todo-item");
+          newDiv.appendChild(newTodo);
+          
+          const btn_hoanthanh = document.createElement("button");
+          btn_hoanthanh.innerText = ("Hoan thanh");
+          btn_hoanthanh.classList.add("completed_btn");
+          newDiv.appendChild(btn_hoanthanh)  
+          
+          const btn_xoa = document.createElement("button");
+          btn_xoa.innerText = ("Xoa");
+          btn_xoa.classList.add("delete_btn");
+          newDiv.appendChild(btn_xoa) 
+          
+          list_todo.appendChild(newDiv);
+          });
+      
+      
+    }
+
+
+
+      
+      // const addList = document.querySelector(".add-list");
+      // const addBtn = document.querySelector(".uil-plus");
+      // const inputField = document.getElementById("input");
+
+      // addBtn.addEventListener("click", () => {
+      //   const createElement = document.createElement("div");
+      //   createElement.classList.add("create-div");
+      //   createElement.innerText = inputField.value;
+      //   addList.appendChild(createElement);
+      //   inputField.value = "";
+
+      //   createElement.addEventListener("click", () => {
+      //     createElement.style.textDecoration = "line-through";
+      //   });
+
+      //   createElement.addEventListener("dblclick", () => {
+      //     addList.removeChild(createElement);
+      //   });
+      // });
+    </script>
+  </body>
+</html>
